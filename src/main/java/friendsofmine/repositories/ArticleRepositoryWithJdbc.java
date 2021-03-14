@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,4 +45,41 @@ public class ArticleRepositoryWithJdbc implements ArticleRepositoryInt {
 
         return articles;
     }
+
+    public Article findArticleById(int id) {
+        Article article = null;
+        ResultSet fetchedArticle;
+        Connection connexion = null;
+
+        try {
+            connexion = dataSource.getConnection();
+            PreparedStatement statement =
+                    connexion.prepareStatement("SELECT id, titre, categorie FROM articles WHERE id = ?");
+
+            statement.setString(1, String.valueOf(id));
+            fetchedArticle = statement.executeQuery();
+
+            if(fetchedArticle.next()) {
+                article = new Article();
+                article.setArticleId(fetchedArticle.getInt("id"));
+                article.setTitre(fetchedArticle.getString("titre"));
+                article.setCategorie(fetchedArticle.getString("categorie"));
+            }
+            statement.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connexion != null)
+                    connexion.close();
+            } catch(SQLException sqle) {
+                sqle.printStackTrace();
+            }
+        }
+
+        return article;
+
+    }
+
+
 }
