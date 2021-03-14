@@ -1,5 +1,6 @@
 package friendsofmine;
 
+import friendsofmine.domain.Article;
 import friendsofmine.repositories.ArticleRepositoryInt;
 import friendsofmine.services.ArticleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,9 @@ import static org.mockito.Mockito.verify;
 public class ArticleServiceTest {
 
     private ArticleService articleService;
+
+    @MockBean
+    private Article article;
 
     @MockBean
     private ArticleRepositoryInt articleRepository;
@@ -38,6 +42,14 @@ public class ArticleServiceTest {
         articleService.findArticleById(0);
         // then: findArticleById() du dépôt associé au service est invoqué
         verify(articleService.getArticleRepository()).findArticleById(0);
+    }
+
+    @Test
+    public void testSaveArticleIsDelegatedToRepository() {
+        // when: saveArticle() est appelé sur un articleService
+        articleService.saveArticle(article);
+        // then: saveArticle() du dépôt associé au service est invoqué
+        verify(articleService.getArticleRepository()).saveArticle(article);
     }
 
 }
