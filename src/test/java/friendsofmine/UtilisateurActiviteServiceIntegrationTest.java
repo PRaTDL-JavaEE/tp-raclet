@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -135,6 +137,45 @@ public class UtilisateurActiviteServiceIntegrationTest {
 
         // then: the fetched activite is null
         assertThat(fetchedUtilisateur, is(nullValue()));
+    }
+
+    @Test
+    public void testFindAllUtilisateur() {
+
+        // given: three persisted Utilisateur
+        utilisateurActiviteService.save(new Utilisateur("Pierre", "Paule", "paule@yeah.co.uk", "F"));
+        utilisateurActiviteService.save(new Utilisateur("Casablancas", "Julian", "jc@thestrokes.com", "M"));
+        utilisateurActiviteService.save(utilisateur);
+
+        // when: searching for all Utilisateur
+        List<Utilisateur> utilisateurs = utilisateurActiviteService.findAllUtilisateur();
+
+        // then: all Utilisateur are fetched
+        assertThat(utilisateurs.size(), is(7)); // 3 + 4 from DataLoader
+
+        // then: Utilisateur are sorted by name
+        assertThat(utilisateurs.get(0).getNom(), is("Baril"));
+        assertThat(utilisateurs.get(1).getNom(), is("Bilodeau"));
+        assertThat(utilisateurs.get(2).getNom(), is("Breton"));
+        assertThat(utilisateurs.get(3).getNom(), is("Casablancas"));
+    }
+
+    @Test
+    public void testFindAllUtilisateurFromDataLoader() {
+        // given: the initialization of DataLoader
+
+        // when: searching for all Utilisateur
+        List<Utilisateur> utilisateurs = utilisateurActiviteService.findAllUtilisateur();
+
+        // then: 4 Utilisateur are fetched
+        assertThat(utilisateurs.size(), is(4));
+
+        // then: Utilisateur are sorted by title
+        assertThat(utilisateurs.get(0).getNom(), is("Baril"));
+        assertThat(utilisateurs.get(1).getNom(), is("Bilodeau"));
+        assertThat(utilisateurs.get(2).getNom(), is("Breton"));
+        assertThat(utilisateurs.get(3).getNom(), is("Ferland"));
+
     }
 
 }
