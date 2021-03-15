@@ -45,6 +45,11 @@ public class UtilisateurActiviteService {
         return query.getResultList();
     }
 
+    @Transactional
+    public void deleteUtilisateurById(Long id) {
+        entityManager.remove(findUtilisateurById(id));
+    }
+
     public EntityManager getEntityManager() {
         return entityManager;
     }

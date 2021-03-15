@@ -1,5 +1,6 @@
 package friendsofmine;
 
+import friendsofmine.domain.Activite;
 import friendsofmine.domain.Utilisateur;
 import friendsofmine.services.UtilisateurActiviteService;
 import org.hamcrest.Matchers;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -194,5 +197,43 @@ public class UtilisateurControllerTest {
                 .andExpect(view().name("error"))
                 .andDo(print());
     }
+
+    @Test
+    public void testDeleteUtilisateur() throws Exception {
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/delete" avec un id valide
+        // then: la requête est acceptée (status OK)
+        // then: une redirection vers la requête GET vers "/utilisateurs" a lieu
+        // then: le nombre d'utilisateurs en base a diminué de 1
+        long count = utilisateurActiviteService.findAllUtilisateur().size();
+        assertTrue(count > 0);
+        mockMvc.perform(get("/utilisateur/delete/" + util.getId()))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/utilisateurs"))
+                .andDo(print());
+        assertEquals(count - 1, utilisateurActiviteService.findAllUtilisateur().size());
+    }
+
+    @Test
+    public void testDeleteUtilisateurAvecActivite() throws Exception {
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/delete/{id}" où id est l'id d'un Utilisateur en base
+        //       qui est responsable d'une activité
+        // then: la requête est acceptée (status OK)
+        // then: la vue "error" est rendue
+        long count = utilisateurActiviteService.findAllUtilisateur().size();
+        Activite act = new Activite("Football", "Le mardi soir", util);
+        act = utilisateurActiviteService.save(act);
+        util = act.getResponsable();
+        assertTrue(util.getActivites().size() > 0);
+        mockMvc.perform(get("/utilisateur/delete/" + util.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("error"))
+                .andExpect(content().string(Matchers.containsString("L&#39;utilisateur est responsable d&#39;activités")))
+                .andDo(print());
+        assertEquals(count, utilisateurActiviteService.findAllUtilisateur().size());
+    }
+
 
 }

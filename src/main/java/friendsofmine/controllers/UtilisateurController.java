@@ -62,4 +62,21 @@ public class UtilisateurController {
         return "utilisateurForm";
     }
 
+    @GetMapping("utilisateur/delete/{id}")
+    public String deleteUtilisateur(@PathVariable Long id, Model model){
+        Utilisateur util = utilisateurActiviteService.findUtilisateurById(id);
+        if (util == null) {
+            model.addAttribute("customMessage", "Impossible. Id non valide");
+            return "error";
+        }
+        if (util.getActivites().size() != 0) {
+            model.addAttribute("customMessage", "Impossible. L'utilisateur est responsable d'activités. \n " +
+                    "Un nouveau responsable doit être désigné avant de supprimer " +
+                    util.getPrenom() + " " + util.getNom() + ".");
+            return "error";
+        }
+        utilisateurActiviteService.deleteUtilisateurById(id);
+        return "redirect:/utilisateurs";
+    }
+
 }
