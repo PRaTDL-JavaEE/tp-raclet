@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @Service
 public class UtilisateurActiviteService {
@@ -13,13 +15,20 @@ public class UtilisateurActiviteService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void save(Activite activite) {
-        entityManager.persist(activite);
+    @Transactional
+    public Activite save(Activite activite) {
+        activite.setResponsable(save(activite.getResponsable()));
+        Activite a = entityManager.merge(activite);
+        Utilisateur resp = a.getResponsable();
+        resp.add(a);
+        return a;
     }
 
-    public void save(Utilisateur utilisateur) {
-        entityManager.persist(utilisateur);
+    @Transactional
+    public Utilisateur save(Utilisateur utilisateur) {
+        return entityManager.merge(utilisateur);
     }
+
 
     public Activite findActiviteById(Long id) {
         return entityManager.find(Activite.class, id);

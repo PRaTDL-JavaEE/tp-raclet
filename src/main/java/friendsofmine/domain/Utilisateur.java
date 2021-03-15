@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -86,5 +87,11 @@ public class Utilisateur {
 
     public void setActivites(Collection<Activite> activites) {
         this.activites = activites;
+    }
+
+    public void add(Activite activite) {
+        if (getActivites() == null)
+            setActivites(new ArrayList<>());
+        getActivites().add(activite);
     }
 }

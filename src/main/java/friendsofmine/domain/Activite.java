@@ -59,4 +59,5 @@ public class Activite {
     public void setResponsable(Utilisateur responsable) {
         this.responsable = responsable;
     }
+
 }

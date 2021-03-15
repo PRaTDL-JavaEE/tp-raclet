@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityManager;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
@@ -22,11 +23,14 @@ public class UtilisateurActiviteServiceTest {
     @MockBean
     private EntityManager entityManager;
 
-    @MockBean
-    private Utilisateur utilisateur;
+    @MockBean(name = "activite")
+    private Activite activite;
+
+    @MockBean(name = "managedActivite")
+    private Activite managedActivite;
 
     @MockBean
-    private Activite activite;
+    private Utilisateur utilisateur;
 
     private Long anId = 1L;
 
@@ -34,30 +38,36 @@ public class UtilisateurActiviteServiceTest {
     public void setUp() throws Exception {
         utilisateurActiviteService = new UtilisateurActiviteService();
         utilisateurActiviteService.setEntityManager(entityManager);
+        given(this.entityManager.merge(activite)).willReturn(managedActivite);
+        given(this.activite.getResponsable()).willReturn(utilisateur);
+        given(this.managedActivite.getResponsable()).willReturn(utilisateur);
     }
 
     @Test
-    public void testEntityManagerPersistActiviteWhenActiviteIsSaved() {
-        // when: trying to save a Activite
+    public void testEntityManagerPersistAnActiviteWhenActiviteIsSaved() {
+
+        // when: trying to save a activite
         utilisateurActiviteService.save(activite);
 
-        // then: the persist method is invoke on the entity manager
-        verify(utilisateurActiviteService.getEntityManager()).persist(activite);
+        // then: the merge method is invoke on the entity manager
+        verify(utilisateurActiviteService.getEntityManager()).merge(activite);
+        // then: the merge method is invoke on the entity manager
+        verify(entityManager).merge(utilisateur);
     }
 
     @Test
-    public void testEntityManagerPersistAUtilisateurWhenUtilisateurIsSaved() {
-        // when: trying to save a Utilisateur
+    public void testEntityManagerPersistAnUtilisateurWhenUtilisateurIsSaved() {
+        // when: trying to save an utilisateur
         utilisateurActiviteService.save(utilisateur);
 
-        // then: the persist method is invoke on the entity manager
-        verify(utilisateurActiviteService.getEntityManager()).persist(utilisateur);
+        // then: the merge method is invoke on the entity manager
+        verify(entityManager).merge(utilisateur);
     }
 
     @Test
-    public void testEntityManagerFindActiviteWhenActiviteIsSearchedById() {
+    public void testEntityManagerFindAActiviteWhenActiviteIsSearchedById() {
 
-        // when: trying to find an Activite
+        // when: trying to save the activite
         utilisateurActiviteService.findActiviteById(anId);
 
         // then: the find method is invoke on the entity manager
@@ -65,13 +75,12 @@ public class UtilisateurActiviteServiceTest {
     }
 
     @Test
-    public void testEntityManagerFindUtilisateurWhenUtilisateurIsSearchedById() {
+    public void testEntityManagerFindAnUtilisateurWhenUtilisateurIsSearchedById() {
 
-        // when: trying to find an Utilisateur
+        // when: trying to save the activite
         utilisateurActiviteService.findUtilisateurById(anId);
 
         // then: the find method is invoke on the entity manager
         verify(entityManager).find(Utilisateur.class, anId);
     }
-
 }
