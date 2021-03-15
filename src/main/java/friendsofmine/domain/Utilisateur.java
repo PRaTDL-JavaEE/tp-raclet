@@ -2,10 +2,7 @@ package friendsofmine.domain;
 
 import jdk.jshell.execution.Util;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -32,7 +29,7 @@ public class Utilisateur {
     @NotNull @Pattern(regexp = "^[MF]{1}$")
     private String sexe;
 
-    @OneToMany(mappedBy = "responsable")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "responsable")
     private Collection<Activite> activites;
 
     public Utilisateur() { }
