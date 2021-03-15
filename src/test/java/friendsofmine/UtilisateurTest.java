@@ -109,4 +109,13 @@ public class UtilisateurTest {
         Assertions.assertFalse(validator.validate(util).isEmpty());
     }
 
+    @Test
+    public void testUnNouvelUtilisateurEstSansActivite() {
+        // given: un Utilisateur tout juste créé
+        Utilisateur util = new Utilisateur("Durand", "Eric", "jd@jd.com", "M");
+        // when: on récupère la liste des activités auxquelles il participe
+        // then: la liste est null
+        Assertions.assertNull(util.getActivites(), "Un nouvel Utilisateur n'a pas d'activité");
+    }
+
 }

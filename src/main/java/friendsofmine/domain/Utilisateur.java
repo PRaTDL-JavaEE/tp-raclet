@@ -5,10 +5,12 @@ import jdk.jshell.execution.Util;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 
 @Entity
 public class Utilisateur {
@@ -28,6 +30,9 @@ public class Utilisateur {
 
     @NotNull @Pattern(regexp = "^[MF]{1}$")
     private String sexe;
+
+    @OneToMany(mappedBy = "responsable")
+    private Collection<Activite> activites;
 
     public Utilisateur() { }
 
@@ -73,5 +78,13 @@ public class Utilisateur {
 
     public Long getId() {
         return id;
+    }
+
+    public Collection<Activite> getActivites() {
+        return activites;
+    }
+
+    public void setActivites(Collection<Activite> activites) {
+        this.activites = activites;
     }
 }

@@ -3,6 +3,7 @@ package friendsofmine.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,11 +20,16 @@ public class Activite {
 
     private String descriptif ;
 
+    @NotNull
+    @ManyToOne
+    private Utilisateur responsable;
+
     public Activite() { }
 
-    public Activite(String titre, String descriptif) {
+    public Activite(String titre, String descriptif, Utilisateur utilisateur) {
         this.titre = titre;
         this.descriptif = descriptif;
+        this.responsable = utilisateur;
     }
 
     public String getTitre() {
@@ -44,5 +50,13 @@ public class Activite {
 
     public Long getId() {
         return id;
+    }
+
+    public Utilisateur getResponsable() {
+        return responsable;
+    }
+
+    public void setResponsable(Utilisateur responsable) {
+        this.responsable = responsable;
     }
 }
