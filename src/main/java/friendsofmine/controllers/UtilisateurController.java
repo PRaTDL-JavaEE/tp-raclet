@@ -51,4 +51,15 @@ public class UtilisateurController {
         return "redirect:/utilisateur/" + util.getId();
     }
 
+    @GetMapping("utilisateur/edit/{id}")
+    public String editUtilisateur(@PathVariable Long id, Model model){
+        Utilisateur util = utilisateurActiviteService.findUtilisateurById(id);
+        if (util == null) {
+            model.addAttribute("customMessage", "Impossible. Id non valide");
+            return "error";
+        }
+        model.addAttribute("utilisateur", util);
+        return "utilisateurForm";
+    }
+
 }

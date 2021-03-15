@@ -91,4 +91,9 @@ public class Utilisateur {
             setActivites(new ArrayList<>());
         getActivites().add(activite);
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

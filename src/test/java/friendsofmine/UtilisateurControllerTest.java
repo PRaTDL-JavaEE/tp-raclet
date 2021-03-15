@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.hamcrest.core.Is.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -162,6 +164,35 @@ public class UtilisateurControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    public void testEditUtilisateurIdValide() throws Exception{
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/edit/{id}" avec un id valide
+        // then: la requête est acceptée (status OK)
+        // then: la vue "utilisateurForm" est les infos de l'utilisateur dont l'id est id
+        Long savId = util.getId();
+        mockMvc.perform(get("/utilisateur/edit/" + savId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("utilisateurForm"))
+                .andExpect(content().string(Matchers.containsString(util.getNom())))
+                .andExpect(content().string(Matchers.containsString(util.getPrenom())))
+                .andExpect(content().string(Matchers.containsString(util.getEmail())))
+                .andExpect(model().attribute("utilisateur", hasProperty("id", is(savId))))
+                .andDo(print());
+    }
 
+    @Test
+    public void testEditUtilisateurIdInvalide() throws Exception{
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/edit/{id}" avec un id invalide
+        // then: la requête est acceptée (status OK)
+        // then: la vue "error" est rendue
+        mockMvc.perform(get("/utilisateur/edit/" + (util.getId() + 1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("error"))
+                .andDo(print());
+    }
 
 }
