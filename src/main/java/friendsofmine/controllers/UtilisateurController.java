@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -77,6 +78,12 @@ public class UtilisateurController {
         }
         utilisateurActiviteService.deleteUtilisateurById(id);
         return "redirect:/utilisateurs";
+    }
+
+    @GetMapping("utilisateur/search")
+    public String searchUtilisateurs(@RequestParam(value = "sexe",required = true)String sexe, Model model) {
+        model.addAttribute("utilisateurs", utilisateurActiviteService.findAllUtilisateurBySexe(sexe));
+        return "utilisateurs";
     }
 
 }

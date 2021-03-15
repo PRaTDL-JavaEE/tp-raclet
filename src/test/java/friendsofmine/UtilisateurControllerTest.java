@@ -235,5 +235,47 @@ public class UtilisateurControllerTest {
         assertEquals(count, utilisateurActiviteService.findAllUtilisateur().size());
     }
 
+    @Test
+    public void testFindUtilisateursFemme() throws Exception {
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/search?sexe=F"
+        // then: la requête est acceptée (status OK)
+        // then: la vue "utilisateurs" est rendue
+        // then : le code HTML de la vue ne comporte pas la balise  <td>M</td>
+        mockMvc.perform(get("/utilisateur/search?sexe=F"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("utilisateurs"))
+                .andExpect(content().string(Matchers.not(Matchers.containsString("<td>M</td>"))))
+                .andDo(print());
+    }
+
+    @Test
+    public void testFindUtilisateursHomme() throws Exception {
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/search?sexe=M"
+        // then: la requête est acceptée (status OK)
+        // then: la vue "utilisateurs" est rendue
+        // then : le code HTML de la vue ne comporte pas la balise  <td>F/td>
+        mockMvc.perform(get("/utilisateur/search?sexe=M"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("utilisateurs"))
+                .andExpect(content().string(Matchers.not(Matchers.containsString("<td>F</td>"))))
+                .andDo(print());
+    }
+
+    @Test
+    public void testFindUtilisateursSexeInconnu() throws Exception {
+        // given: un objet MockMvc qui simulate des échanges Mvc
+        // when: on simule du requête HTTP de type GET vers "/utilisateur/search?sexe=W"
+        // then: la requête est acceptée (status OK)
+        // then: la vue "utilisateurs" est rendue
+        mockMvc.perform(get("/utilisateur/search?sexe=W"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("text/html;charset=UTF-8"))
+                .andExpect(view().name("utilisateurs"))
+                .andDo(print());
+    }
 
 }

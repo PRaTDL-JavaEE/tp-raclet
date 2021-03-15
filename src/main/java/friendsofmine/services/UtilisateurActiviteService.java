@@ -57,4 +57,14 @@ public class UtilisateurActiviteService {
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
+    public List<Utilisateur> findAllUtilisateurBySexe(String sexe) {
+        if (sexe.equals("M") || sexe.equals("F")) {
+            TypedQuery<Utilisateur> query = entityManager.createQuery("from Utilisateur a where a.sexe=:sex order by a.nom", Utilisateur.class);
+            query.setParameter("sex", sexe);
+            return query.getResultList();
+        }
+        return findAllUtilisateur();
+    }
+
 }
