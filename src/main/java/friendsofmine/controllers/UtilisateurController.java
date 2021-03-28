@@ -19,11 +19,13 @@ public class UtilisateurController {
     @Autowired
     private UtilisateurActiviteService utilisateurActiviteService;
 
+    /*
     @GetMapping("/utilisateurs")
     public String list(Model model) {
         model.addAttribute("utilisateurs", utilisateurActiviteService.findAllUtilisateur());
         return "utilisateurs";
     }
+    */
 
     @GetMapping("utilisateur/{id}")
     public String showUtilisateur(@PathVariable Long id, Model model){
@@ -63,6 +65,7 @@ public class UtilisateurController {
         return "utilisateurForm";
     }
 
+    /*
     @GetMapping("utilisateur/delete/{id}")
     public String deleteUtilisateur(@PathVariable Long id, Model model){
         Utilisateur util = utilisateurActiviteService.findUtilisateurById(id);
@@ -85,5 +88,5 @@ public class UtilisateurController {
         model.addAttribute("utilisateurs", utilisateurActiviteService.findAllUtilisateurBySexe(sexe));
         return "utilisateurs";
     }
-
+*/
 }

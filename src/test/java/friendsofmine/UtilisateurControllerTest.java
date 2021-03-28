@@ -198,6 +198,7 @@ public class UtilisateurControllerTest {
                 .andDo(print());
     }
 
+    /*
     @Test
     public void testDeleteUtilisateur() throws Exception {
         // given: un objet MockMvc qui simulate des échanges Mvc
@@ -277,5 +278,5 @@ public class UtilisateurControllerTest {
                 .andExpect(view().name("utilisateurs"))
                 .andDo(print());
     }
-
+*/
 }

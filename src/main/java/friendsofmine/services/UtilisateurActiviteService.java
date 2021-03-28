@@ -2,6 +2,10 @@ package friendsofmine.services;
 
 import friendsofmine.domain.Activite;
 import friendsofmine.domain.Utilisateur;
+import friendsofmine.repositories.ActiviteRepository;
+import friendsofmine.repositories.UtilisateurRepository;
+import jdk.jshell.execution.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -14,57 +18,51 @@ import java.util.List;
 @Service
 public class UtilisateurActiviteService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private ActiviteRepository activiteRepository ;
 
-    @Transactional
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
     public Activite save(Activite activite) {
-        activite.setResponsable(save(activite.getResponsable()));
-        Activite a = entityManager.merge(activite);
-        Utilisateur resp = a.getResponsable();
-        resp.add(a);
-        return a;
+        if (activite == null) {
+            throw new IllegalArgumentException("Activite must not be null");
+        }
+
+        Utilisateur responsable = activite.getResponsable();
+        if (responsable != null) {
+            save(responsable);
+            responsable.add(activite);
+        }
+        return activiteRepository.save(activite);
     }
 
-    @Transactional
     public Utilisateur save(Utilisateur utilisateur) {
-        return entityManager.merge(utilisateur);
+        return utilisateurRepository.save(utilisateur);
     }
-
 
     public Activite findActiviteById(Long id) {
-        return entityManager.find(Activite.class, id);
+        return activiteRepository.findById(id).orElse(null);
     }
 
     public Utilisateur findUtilisateurById(Long id) {
-        return entityManager.find(Utilisateur.class, id);
+        return utilisateurRepository.findById(id).orElse(null);
     }
 
-    public List<Utilisateur> findAllUtilisateur() {
-        TypedQuery<Utilisateur> query = entityManager.createQuery("select a from Utilisateur a order by a.nom", Utilisateur.class);
-        return query.getResultList();
+    public ActiviteRepository getActiviteRepository() {
+        return activiteRepository;
     }
 
-    @Transactional
-    public void deleteUtilisateurById(Long id) {
-        entityManager.remove(findUtilisateurById(id));
+    public void setActiviteRepository(ActiviteRepository activiteRepository) {
+        this.activiteRepository = activiteRepository;
     }
 
-    public EntityManager getEntityManager() {
-        return entityManager;
+    public UtilisateurRepository getUtilisateurRepository() {
+        return utilisateurRepository;
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public List<Utilisateur> findAllUtilisateurBySexe(String sexe) {
-        if (sexe.equals("M") || sexe.equals("F")) {
-            TypedQuery<Utilisateur> query = entityManager.createQuery("from Utilisateur a where a.sexe=:sex order by a.nom", Utilisateur.class);
-            query.setParameter("sex", sexe);
-            return query.getResultList();
-        }
-        return findAllUtilisateur();
+    public void setUtilisateurRepository(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
     }
 
 }

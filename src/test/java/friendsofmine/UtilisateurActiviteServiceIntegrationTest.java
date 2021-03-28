@@ -139,6 +139,7 @@ public class UtilisateurActiviteServiceIntegrationTest {
         assertThat(fetchedUtilisateur, is(nullValue()));
     }
 
+    /*
     @Test
     public void testFindAllUtilisateur() {
 
@@ -177,5 +178,5 @@ public class UtilisateurActiviteServiceIntegrationTest {
         assertThat(utilisateurs.get(3).getNom(), is("Ferland"));
 
     }
-
+*/
 }
