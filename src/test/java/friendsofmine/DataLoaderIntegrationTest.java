@@ -108,5 +108,29 @@ public class DataLoaderIntegrationTest {
                 dataLoader.getLeon().getId(), "Léon est le responsable");
     }
 
+    @Test
+    public void testCheckResponsableForLeon() {
+        // Leon est responsable de 3 activités
+        Assertions.assertEquals(3, dataLoader.getLeon().getActivites().size());
+    }
+
+    @Test
+    public void testCheckResponsableForJulien() {
+        // Leon est responsable de 3 activités
+        Assertions.assertEquals(2, dataLoader.getJulien().getActivites().size());
+    }
+
+    @Test
+    public void testCheckResponsableForYseult() {
+        // Leon est responsable de 3 activités
+        Assertions.assertEquals(1, dataLoader.getYseult().getActivites().size());
+    }
+
+    @Test
+    public void testCheckResponsableForArnaude() {
+        // Leon est responsable de 3 activités
+        Assertions.assertEquals(1, dataLoader.getArnaude().getActivites().size());
+    }
+
 
 }

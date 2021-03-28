@@ -13,7 +13,7 @@ public class DataLoader {
 
     private UtilisateurActiviteService utilisateurActiviteService;
     private Utilisateur leon, arnaude, julien, yseult;
-    private Activite petanque, sieste, guitare, footing, cardio, sophrologie;
+    private Activite petanque, sieste, guitare, footing, cardio, sophrologie, jogging;
 
     @Autowired
     public DataLoader(UtilisateurActiviteService utilisateurActiviteService) {
@@ -40,6 +40,8 @@ public class DataLoader {
         leon = cardio.getResponsable();
         sophrologie = utilisateurActiviteService.save(new Activite("Sophrologie", "En salle B-123", leon));
         leon = sophrologie.getResponsable();
+        jogging = utilisateurActiviteService.save(new Activite("Jogging", "Tous les midis", julien));
+        julien = jogging.getResponsable();
 
     }
 
