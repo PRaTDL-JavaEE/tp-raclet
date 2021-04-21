@@ -1,3 +1,4 @@
+drop table if exists articles;
 create table articles
 (
   id integer not null,
